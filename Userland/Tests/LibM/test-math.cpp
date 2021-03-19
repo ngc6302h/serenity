@@ -26,6 +26,7 @@
 
 #include <AK/TestSuite.h>
 
+#include <complex.h>
 #include <float.h>
 #include <math.h>
 
@@ -260,6 +261,36 @@ TEST_CASE(fmax_and_fmin)
     EXPECT(fmin(NAN, 5) == 5);
     EXPECT(fmin(0, NAN) == 0);
     EXPECT(isnan(fmin(NAN, NAN)));
+}
+
+TEST_CASE(complex)
+{
+    auto a = complex<float> { 1.f, 1.f };
+    auto b = complex_real_unit<double> + complex<double> { 0, 1 } * 1;
+    EXPECT_APPROXIMATE(a.real(), b.real());
+    EXPECT_APPROXIMATE(a.imag(), b.imag());
+    EXPECT_APPROXIMATE((complex_imag_unit<float> - complex_imag_unit<float>).magnitude(), 0);
+    EXPECT_APPROXIMATE((complex_imag_unit<float> + complex_real_unit<float>).magnitude(), sqrt(2));
+
+    auto c = complex<double> { 0., 1. };
+    auto d = complex<double>::from_polar(1., M_PI / 2.);
+    EXPECT_APPROXIMATE(c.real(), d.real());
+    EXPECT_APPROXIMATE(c.imag(), d.imag());
+
+    c = complex<double> { -1., 1. };
+    d = complex<double>::from_polar(sqrt(2.), 3. * M_PI / 4.);
+    EXPECT_APPROXIMATE(c.real(), d.real());
+    EXPECT_APPROXIMATE(c.imag(), d.imag());
+    EXPECT_APPROXIMATE(d.phase(), 3. * M_PI / 4.);
+    EXPECT_APPROXIMATE(c.magnitude(), d.magnitude());
+    EXPECT_APPROXIMATE(c.magnitude(), sqrt(2.));
+    EXPECT_EQ((complex_imag_unit<double> * complex_imag_unit<double>).real(), -1.);
+    EXPECT_EQ((complex_imag_unit<double> / complex_imag_unit<double>).real(), 1.);
+
+    EXPECT_EQ(complex(1., 10.) == (complex<double>(1., 0.) + complex(0., 10.)), true);
+    EXPECT_EQ(complex(1., 10.) != (complex<double>(1., 1.) + complex(0., 10.)), true);
+    EXPECT_EQ(approx_eq(complex<int>(1), complex<float>(1.0000004f)), true);
+    EXPECT_APPROXIMATE(exp(complex<double>(0., 1.) * M_PI).real(), -1.);
 }
 
 TEST_MAIN(Math)
