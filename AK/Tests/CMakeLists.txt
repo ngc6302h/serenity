@@ -15,6 +15,7 @@ set(AK_TEST_SOURCES
     TestCircularDeque.cpp
     TestCircularDuplexStream.cpp
     TestCircularQueue.cpp
+    TestComplex.cpp
     TestDistinctNumeric.cpp
     TestDoublyLinkedList.cpp
     TestEndian.cpp
