@@ -59,15 +59,12 @@ int main(int argc, char** argv)
         true,
         false,
         false,
+        false,
+        44100,
         1.0,
         audio_client,
         playback_manager,
         "" };
-
-    if (pledge("stdio recvfd sendfd accept rpath thread", nullptr) < 0) {
-        perror("pledge");
-        return 1;
-    }
 
     auto app_icon = GUI::Icon::default_icon("app-sound-player");
 
@@ -76,14 +73,14 @@ int main(int argc, char** argv)
     window->set_icon(app_icon.bitmap_for_size(16));
 
     auto menubar = GUI::MenuBar::construct();
-
     auto& app_menu = menubar->add_menu("Sound Player");
-    // start in simple view by default
-    Player* player = &window->set_main_widget<SoundPlayerWidget>(window, initial_player_state);
+    auto& playlist_menu = menubar->add_menu("Playlist");
+
+    String path = argv[1];
+    // start in advanced view by default
+    Player* player = &window->set_main_widget<SoundPlayerWidgetAdvancedView>(window, initial_player_state);
     if (argc > 1) {
-        String path = argv[1];
         player->open_file(path);
-        player->play();
     }
 
     app_menu.add_action(GUI::CommonActions::make_open_action([&](auto&) {
@@ -119,7 +116,7 @@ int main(int argc, char** argv)
     auto& playback_menu = menubar->add_menu("Playback");
 
     auto loop = GUI::Action::create_checkable("Loop", { Mod_Ctrl, Key_R }, [&](auto& action) {
-        player->set_looping(action.is_checked());
+        player->set_looping_file(action.is_checked());
     });
 
     playback_menu.add_action(move(loop));
