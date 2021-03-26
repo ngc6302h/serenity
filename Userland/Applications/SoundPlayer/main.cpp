@@ -26,7 +26,7 @@
 
 #include "NoVisualizationWidget.h"
 #include "Player.h"
-#include "SoundPlayerWidget.h"
+#include "SampleWidget.h"
 #include "SoundPlayerWidgetAdvancedView.h"
 #include <LibAudio/ClientConnection.h>
 #include <LibGUI/Action.h>

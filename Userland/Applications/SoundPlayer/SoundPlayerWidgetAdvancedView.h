@@ -52,11 +52,9 @@ public:
         m_visualization->remove_from_parent();
         update();
         auto new_visualization = T::construct();
-        insert_child_before(new_visualization, *static_cast<Core::Object*>(m_playback_progress_slider.ptr()));
+        m_player_view->insert_child_before(new_visualization, *static_cast<Core::Object*>(m_playback_progress_slider.ptr()));
         m_visualization = new_visualization;
     }
-
-    void set_nonlinear_volume_slider(bool nonlinear);
 
 private:
     void drop_event(GUI::DropEvent& event) override;
